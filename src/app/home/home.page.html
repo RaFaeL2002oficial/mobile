@@ -1,20 +1,59 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
+    <ion-title>Conversor de Moedas</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <!-- Entrada para conversão -->
+  <ion-item>
+    <ion-label position="floating">Moeda Base</ion-label>
+    <ion-select [(ngModel)]="baseCurrency" (ionChange)="fetchCurrencies()">
+      <ion-select-option *ngFor="let currency of currencies" [value]="currency">{{ currency }}</ion-select-option>
+    </ion-select>
+  </ion-item>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+  <ion-item>
+    <ion-label position="floating">Moeda Alvo</ion-label>
+    <ion-select [(ngModel)]="targetCurrency">
+      <ion-select-option *ngFor="let currency of currencies" [value]="currency">{{ currency }}</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <!-- Botão de inversão -->
+  <div class="invert-button">
+    <ion-button (click)="invertCurrencies()" expand="block" color="tertiary">
+      Inverter Moedas
+    </ion-button>
   </div>
+
+  <ion-item>
+    <ion-label position="floating">Valor</ion-label>
+    <ion-input type="number" [(ngModel)]="amount"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>Resultado: {{ convertedAmount || 'N/A' }}</ion-label>
+  </ion-item>
+
+  <ion-button (click)="convert()" expand="block" color="primary">
+    Converter
+  </ion-button>
+
+  <ion-button color="danger" (click)="clearConversionHistory()">Limpar Histórico</ion-button>
+
+
+  <!-- Histórico de conversões -->
+  <ion-list>
+    <ion-list-header>
+      <ion-label>Histórico de Conversões</ion-label>
+    </ion-list-header>
+    <ion-item *ngFor="let item of history">
+      <ion-label>
+        {{ item.date | date:'short' }}: 
+        {{ item.amount }} {{ item.baseCurrency }} -> 
+        {{ item.result | number:'1.2-2' }} {{ item.targetCurrency }}
+      </ion-label>
+    </ion-item>
+  </ion-list>
 </ion-content>
